@@ -9,6 +9,7 @@ class Customer extends Model
 {
     protected $fillable = [
         'user_id',
+        'cust_num',
         'full_name',
         'phone_number',
         'address',
