@@ -10,18 +10,22 @@ use Filament\Tables\Table;
 use Illuminate\Support\Str;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
+use App\Forms\Components\QrCodeField;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
 use Filament\Support\Enums\FontWeight;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\Split;
+use Filament\Tables\Columns\ImageColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Infolists\Components\TextEntry;
 use App\Filament\Resources\CustomerResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Infolists\Components\Section as InfoSec;
 use App\Filament\Resources\CustomerResource\RelationManagers;
+use App\Filament\Resources\CustomerResource\RelationManagers\TransactionsRelationManager;
 
 class CustomerResource extends Resource
 {
@@ -65,12 +69,6 @@ class CustomerResource extends Resource
                     ->maxLength(255)
                     ->required(),
 
-                    TextInput::make('address')
-                    ->maxLength(255),
-
-                    TextInput::make('qr_code')
-                    ->maxLength(255),
-
                     TextInput::make('password')
                     ->password()
                     ->maxLength(255)
@@ -81,14 +79,22 @@ class CustomerResource extends Resource
                     ->maxLength(255)
                     ->same('password')
                     ->revealable(),
-
-
                 ])
                 ->columns([
                     'sm' => 1,
                     'md' => 2,
                     'lg' => 2
+                ]),
+
+                Section::make()
+                ->schema([
+                    QrCodeField::make('qr_code')
+                    ->label('Customer QR Code')
+                    ->size(250)
+                    ->columnSpanFull()
+                    ->visible(fn ($record) => $record?->exists),
                 ])
+                ->visibleOn('edit')
             ]);
     }
 
@@ -96,6 +102,28 @@ class CustomerResource extends Resource
     {
         return $table
             ->columns([
+
+                ImageColumn::make('qr_code')
+                ->label('QR Code')
+                ->getStateUsing(function ($record) {
+                    // Generate QR code URL from stored data
+                    $qrData = $record->qr_code ?? [];
+
+                    dd($qrData);
+                    if (empty($qrData)) return null;
+
+                    $params = http_build_query([
+                        'size' => '100x100',
+                        'data' => json_encode($qrData),
+                        'format' => 'png',
+                    ]);
+
+                    return 'https://api.qrserver.com/v1/create-qr-code/?' . $params;
+                })
+                ->height(50)
+                ->width(50)
+                ->visible(fn ($record) => !empty($record->qr_code)),
+
                 TextColumn::make('cust_num')
                 ->sortable()
                 ->searchable()
@@ -166,7 +194,7 @@ class CustomerResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            TransactionsRelationManager::class
         ];
     }
 
@@ -234,6 +262,13 @@ class CustomerResource extends Resource
                             ->date('M j, Y - g:i A'),
                         TextEntry::make('updated_at')
                             ->date('M j, Y - g:i A'),
+
+
+                        // // Add QR Code to the right side
+                        // QrCodeField::make('qr_code')
+                        // ->label('Customer QR Code')
+                        // ->size(200)
+                        // ->columnSpanFull(),
                     ])->grow(false),
                 ])->from('md')
                 ->columnSpanFull()

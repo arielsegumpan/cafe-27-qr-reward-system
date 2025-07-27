@@ -19,7 +19,8 @@ return new class extends Migration
             $table->string('full_name');
             $table->string('phone_number');
             $table->string('address')->nullable();
-            $table->string('qr_code')->nullable();
+            $table->json('qr_code')->nullable();
+            $table->integer('points_balance')->default(0);
             $table->timestamps();
         });
     }
