@@ -9,11 +9,39 @@
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
+
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+    /* Your custom color palette */
+    --color-primary: #b45309;
+    --color-primary-dark: #92400e;
+    --color-secondary: #d97706;
+    --color-dark: #263238;
+    --color-light: #f5f7fa;
+    --color-gray: #90a4ae;
+
+    /* Map to Tailwind's color system */
+    --color-blue-400: var(--color-primary);
+    --color-blue-500: var(--color-primary-dark);
+    --color-purple-400: var(--color-secondary);
+    --color-gray-800: var(--color-dark);
+    --color-gray-50: var(--color-light);
+    --color-gray-400: var(--color-gray);
+
+    /* Preline UI specific overrides */
+    --hs-primary: var(--color-primary);
+    --hs-primary-dark: var(--color-primary-dark);
+    --hs-secondary: var(--color-secondary);
+
+    /* Optional: Font families */
+    --font-sans: "Inter", sans-serif;
+
+    /* Optional: Border radius */
+    --radius-4xl: 2rem;
 }
 
+@custom-variant dark (&:where(.dark, .dark *));
 
 /* Adds pointer cursor to buttons */
 @layer base {
@@ -25,3 +53,7 @@
 
 /* Defaults hover styles on all devices */
 @custom-variant hover (&:hover);
+
+
+.custom-scrollbar::-webkit-scrollbar{width:8px}.custom-scrollbar::-webkit-scrollbar-track{background:#f1f5f9;border-radius:4px}.custom-scrollbar::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}.custom-scrollbar::-webkit-scrollbar-thumb:hover{background:#94a3b8}.dark .custom-scrollbar::-webkit-scrollbar-track{background:#374151}.dark .custom-scrollbar::-webkit-scrollbar-thumb{background:#6b7280}.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover{background:#9ca3af}
+/* .bg-gradient-item{background:linear-gradient(135deg,#fbbf24 0%,#f59e0b 100%)}.bg-primary{background-color:#f59e0b}.bg-primary-dark{background-color:#d97706}.custom-scrollbar::-webkit-scrollbar{width:8px}.custom-scrollbar::-webkit-scrollbar-track{background:#f1f5f9;border-radius:4px}.custom-scrollbar::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}.custom-scrollbar::-webkit-scrollbar-thumb:hover{background:#94a3b8}.dark .custom-scrollbar::-webkit-scrollbar-track{background:#374151}.dark .custom-scrollbar::-webkit-scrollbar-thumb{background:#6b7280}.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover{background:#9ca3af} */

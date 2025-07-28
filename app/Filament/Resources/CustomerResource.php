@@ -10,6 +10,7 @@ use Filament\Tables\Table;
 use Illuminate\Support\Str;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
+use App\Forms\Components\QrCodeEntry;
 use App\Forms\Components\QrCodeField;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
@@ -17,6 +18,7 @@ use Filament\Forms\Components\Section;
 use Filament\Support\Enums\FontWeight;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
+use Filament\Infolists\Components\Group;
 use Filament\Infolists\Components\Split;
 use Filament\Tables\Columns\ImageColumn;
 use Illuminate\Database\Eloquent\Builder;
@@ -68,6 +70,12 @@ class CustomerResource extends Resource
                     ->tel()
                     ->maxLength(255)
                     ->required(),
+
+                    TextInput::make('address')
+                    ->maxLength(255)
+                    ->required()
+                    ->columnSpanFull()
+                    ->prefixIcon('heroicon-o-map-pin'),
 
                     TextInput::make('password')
                     ->password()
@@ -153,8 +161,10 @@ class CustomerResource extends Resource
                 ->searchable()
                 ->label('Address')
                 ->toggleable(isToggledHiddenByDefault: true)
-                ->wrap()
-                ->limit(50),
+                ->limit(15)
+                ->icon('heroicon-o-map-pin')
+                ->badge()
+                ->color('danger'),
 
 
                 TextColumn::make('created_at')
@@ -214,61 +224,70 @@ class CustomerResource extends Resource
         return $infolist
             ->schema([
                 Split::make([
-                    InfoSec::make([
-                        TextEntry::make('cust_num')
-                            ->placeholder('No Customer #')
-                            ->label('Customer #')
-                            ->size(TextEntry\TextEntrySize::Large)
-                            ->weight(FontWeight::Bold)
-                            ->icon('heroicon-o-hashtag')
+                    Group::make([
+                        InfoSec::make([
+                            Group::make([
+                                Group::make([
+                                    TextEntry::make('cust_num')
+                                        ->placeholder('No Customer #')
+                                        ->label('Customer #')
+                                        ->size(TextEntry\TextEntrySize::Large)
+                                        ->weight(FontWeight::Bold)
+                                        ->icon('heroicon-o-hashtag')
+                                        ->columnSpanFull()
+                                        ->color('warning'),
+
+                                    TextEntry::make('full_name')
+                                        ->placeholder('No Name')
+                                        ->label('Name')
+                                        ->size(TextEntry\TextEntrySize::Large)
+                                        ->weight(FontWeight::Bold)
+                                        ->icon('heroicon-o-user'),
+
+                                    TextEntry::make('user.email')
+                                        ->placeholder('No Email')
+                                        ->label('Email')
+                                        ->weight(FontWeight::Bold)
+                                        ->badge()
+                                        ->icon('heroicon-o-envelope')
+                                        ->color('success'),
+
+                                    TextEntry::make('phone_number')
+                                        ->placeholder('No Phone Number')
+                                        ->label('Phone Number')
+                                        ->weight(FontWeight::Bold)
+                                        ->icon('heroicon-o-phone'),
+                                ]),
+
+                                QrCodeEntry::make('qr_code')
+                                    ->label('')
+                                    ->format('svg'),
+                            ])
                             ->columnSpanFull()
-                            ->color('warning'),
+                            ->columns([
+                                'sm' => 1,
+                                'md' => 2,
+                                'lg' => 2
+                            ]),
 
-                        TextEntry::make('full_name')
-                            ->placeholder('No Name')
-                            ->label('Name')
-                            ->size(TextEntry\TextEntrySize::Large)
-                            ->weight(FontWeight::Bold)
-                            ->icon('heroicon-o-user'),
-
-                        TextEntry::make('user.email')
-                            ->placeholder('No Email')
-                            ->label('Email')
-                            ->weight(FontWeight::Bold)
-                            ->badge()
-                            ->icon('heroicon-o-envelope')
-                            ->color('success'),
-
-                        TextEntry::make('phone_number')
-                            ->placeholder('No Phone Number')
-                            ->label('Phone Number')
-                            ->weight(FontWeight::Bold)
-                            ->icon('heroicon-o-phone'),
-
-                        TextEntry::make('address')
-                            ->placeholder('No Address')
-                            ->label('Address')
-                            ->weight(FontWeight::Bold)
-                            ->columnSpanFull()
-                            ->icon('heroicon-o-map-pin'),
-                    ])
-                    ->columns([
-                        'sm' => 1,
-                        'md' => 2,
-                        'lg' => 2
+                            TextEntry::make('address')
+                                ->placeholder('No Address')
+                                ->label('Address')
+                                ->weight(FontWeight::Bold)
+                                ->columnSpanFull()
+                                ->icon('heroicon-o-map-pin'),
+                        ])
+                        ->columns([
+                            'sm' => 1,
+                            'md' => 2,
+                            'lg' => 2
+                        ])
                     ]),
                     InfoSec::make([
                         TextEntry::make('created_at')
                             ->date('M j, Y - g:i A'),
                         TextEntry::make('updated_at')
                             ->date('M j, Y - g:i A'),
-
-
-                        // // Add QR Code to the right side
-                        // QrCodeField::make('qr_code')
-                        // ->label('Customer QR Code')
-                        // ->size(200)
-                        // ->columnSpanFull(),
                     ])->grow(false),
                 ])->from('md')
                 ->columnSpanFull()

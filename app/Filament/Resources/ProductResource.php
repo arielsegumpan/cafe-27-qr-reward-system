@@ -65,7 +65,7 @@ class ProductResource extends Resource
                     ToggleButtons::make('is_active')
                         ->boolean()
                         ->inline()
-                        ->label('Is product active?')
+                        ->label('Is product available?')
                         ->default(true)
                         ->dehydrated(),
 
@@ -100,7 +100,7 @@ class ProductResource extends Resource
                         ->dehydrated()
                         ->default(0.00),
 
-                    TextInput::make('prod_qty')
+                    TextInput::make('prod_quantity')
                         ->label('Quantity')
                         ->required()
                         ->numeric()
@@ -143,7 +143,8 @@ class ProductResource extends Resource
                 ->sortable()
                 ->searchable()
                 ->label('Name')
-                ->weight(FontWeight::Bold),
+                ->weight(FontWeight::Bold)
+                ->limit(50),
 
                 TextColumn::make('prod_slug')
                 ->sortable()
@@ -171,7 +172,7 @@ class ProductResource extends Resource
                 ToggleColumn::make('is_active')
                 ->sortable()
                 ->searchable()
-                ->label('Is Active?'),
+                ->label('Is Available?'),
 
                 TextColumn::make('prod__desc')
                 ->sortable()

@@ -27,12 +27,15 @@ class MainPanelProvider extends PanelProvider
             ->id('main')
             ->path('main')
             ->login()
+            ->registration()
             ->spa()
             ->font('Poppins')
             ->colors([
-                // 'primary' => Color::hex('#4B2E2E'),
                 'primary' => Color::hex('#b45309'),
             ])
+            ->brandLogo(asset('imgs/cafe-27.svg'))
+            ->brandLogoHeight('3rem')
+            ->favicon(asset('imgs/cafe-27.svg'))
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([

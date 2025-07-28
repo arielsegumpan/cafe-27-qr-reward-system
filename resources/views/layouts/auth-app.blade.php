@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+        <title>{{ config('app.name') ?? 'Cafe27' }}</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -20,7 +20,7 @@
         @endif
     </head>
     <body class="bg-[#f7f7f7] dark:bg-neutral-900 max-w-full mx-auto antialiased">
-        <livewire:partials.navigation />
+        <livewire:partials.auth-navigation />
 
         <main>
             {{ $slot }}
